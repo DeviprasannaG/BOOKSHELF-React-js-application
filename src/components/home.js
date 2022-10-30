@@ -6,7 +6,7 @@ function Home(){
   const [searchresults, setSearchresults]= useState([]);
   
   async function apiSubmit(){
-  const response =await axios.get('https://api.nytimes.com/svc/books/v3/reviews.json?author='+search+'&api-key=1M4wJOpIzU95fnG4f5VuizAy2IGA5AnV');
+  const response =await axios.get(`https://api.nytimes.com/svc/books/v3/reviews.json?author=${search}&api-key=${process.env.REACT_APP_API_KEY}`);
   console.log(response.data);
   setSearchresults(response.data);
   }
