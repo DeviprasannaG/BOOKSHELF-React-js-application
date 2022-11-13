@@ -1,45 +1,32 @@
 import React,{useState, useEffect} from  'react';
+import axios from 'axios';
 function Dropdownss({ data }){
-    const [selected, setSelected] = useState("-");
-    const [selectedCategory, setSelectedCategory] = useState(data);
+
+    const [selected, setSelected] = useState("");
+
    
-    useEffect(() => {
-      const category = data.filter((item) => item.key[0] === selected);
-  
-      setSelectedCategory(category);
-    }, [data, selected]);
-  
-    const handleSelcet = (e) => {
-      setSelected(e.target.value);
-    };
+   
+    const getBestSellerBooks=async (event)=>{
+      setSelected(event)
+      console.log(event)
+      const response = await axios.get(`https://api.nytimes.com/svc/books/v3/lists/current/${event}.json?api-key=${process.env.REACT_APP_API_KEY}`);
+        console.log(response.data.results)
+
+    }
     
     return (
       <React.Fragment>
-        <select onChange={handleSelcet}>
+        <select value={selected} 
+        onChange={(event) => getBestSellerBooks(event.target.value)}>
           {data.map((item) =>
-            item.categories.map((category) => (
-              <option key={category} value={category}>
-                {category}
+           
+              <option value={item.list_name_encoded} key={item.list_name_encoded}>
+                {item.list_name}
               </option>
-            ))
+    
           )}
         </select>
-        {selectedCategory.map((category) => {
-          return (
-            <div key={category.id}>
-              <p>Name: {category.author}</p>
-              <p>Description: {category.description}</p>
-              <p>Price: {category.price}</p>
-              variants:
-              <ul>
-                {category.variants.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-              <img src={category.img} alt="" />
-            </div>
-          );
-        })}
+      
       </React.Fragment>
     )
   }
